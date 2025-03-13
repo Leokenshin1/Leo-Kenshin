@@ -1,20 +1,20 @@
 const express = require("express");
-const { exec } = require("child_process");
-const bodyParser = require("body-parser");
 const app = express();
-const port = process.env.PORT || 3000;
-const pino = require("pino");
+__path = process.cwd();
+const bodyParser = require("body-parser");
+const PORT = process.env.PORT || 8000;
+let code = require("./pair");
+require("events").EventEmitter.defaultMaxListeners = 500;
+app.use("/code", code);
 
-// Use the router from pair.js
-const pairRouter = require("./pair");
+app.use("/", async (req, res, next) => {
+  res.sendFile(__path + "/pair.html");
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Set up the routes
-app.use("/", pairRouter);
-
-// Start the server
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`⏩ Server running on http://localhost:` + PORT);
 });
+
+module.exports = app;
